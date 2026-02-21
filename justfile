@@ -1,4 +1,5 @@
+infra STATE="up --build -d":
+    docker-compose {{STATE}}
 
-
-infra:
-    docker-compose up --build -d
+dev:
+    uv run main.py
