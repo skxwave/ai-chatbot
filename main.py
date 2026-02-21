@@ -5,6 +5,7 @@ import sys
 import uvicorn
 from fastapi import FastAPI
 from langgraph.checkpoint.postgres.aio import AsyncPostgresSaver
+from langgraph.store.postgres.aio import AsyncPostgresStore
 from psycopg_pool import AsyncConnectionPool
 
 from src.api.chatbot import router as chat_router
@@ -29,7 +30,14 @@ async def lifespan(app: FastAPI):
     ) as pool:
         checkpointer = AsyncPostgresSaver(pool)
         await checkpointer.setup()
-        app.state.agent = create_graph(checkpointer=checkpointer)
+
+        store = AsyncPostgresStore(pool)
+        await store.setup()
+
+        app.state.agent = create_graph(
+            checkpointer=checkpointer,
+            store=store,
+        )
 
         yield
 
