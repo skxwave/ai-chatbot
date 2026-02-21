@@ -1,18 +1,16 @@
 from fastapi import APIRouter, Request
 from langchain_core.messages import HumanMessage
-from pydantic import BaseModel, Field
+
+from .schemas import ChatRequest
 
 router = APIRouter()
 
 
-class ChatRequest(BaseModel):
-    message: str = Field(..., example="Tell me about python in 10 words")
-    thread_id: str = Field(default="chat_1")
-    user_id: str = Field(default="1")
-
-
-@router.post("/chat")
-async def chat(request: Request, body: ChatRequest):
+@router.post("/chat/invoke")
+async def chat(
+    request: Request,
+    body: ChatRequest,
+):
     agent = request.app.state.agent
 
     config = {

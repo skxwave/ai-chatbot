@@ -42,7 +42,12 @@ async def lifespan(app: FastAPI):
         yield
 
 
-app = FastAPI(lifespan=lifespan)
+app = FastAPI(
+    lifespan=lifespan,
+    debug=settings.debug,
+    title=settings.app_name,
+    version=settings.app_version,
+)
 app.include_router(chat_router)
 
 if __name__ == "__main__":

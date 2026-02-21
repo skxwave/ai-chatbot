@@ -2,7 +2,7 @@ from langgraph.graph.state import StateGraph
 from langgraph.store.base import BaseStore
 from langchain_core.runnables import RunnableConfig
 
-from src.agent.models import model, extraction_llm
+from src.agent.models import llm, extraction_llm
 from src.agent.states import State
 from src.agent.utils import trimmer
 
@@ -18,7 +18,7 @@ async def chat_node(state: State, config: RunnableConfig, store: BaseStore):
     messages = [{"role": "system", "content": system_prompt}] + state["messages"][-5:]
     # trimmed_messages = await trimmer.ainvoke(messages)  # Works with specific models
 
-    response = await model.ainvoke(messages, config=config)
+    response = await llm.ainvoke(messages, config=config)
     return {"messages": [response]}
 
 
